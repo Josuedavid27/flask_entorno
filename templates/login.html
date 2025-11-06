@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialFlow - Iniciar Sesión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 1000px;
+            width: 100%;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .login-left {
+            color: white;
+        }
+
+        .logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .tagline {
+            font-size: 24px;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #1c1e21;
+        }
+
+        .subtitle {
+            color: #606770;
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #1c1e21;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+            background: #f5f6f7;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1877f2;
+            background: white;
+            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.1);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #166fe5;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #606770;
+            font-size: 14px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #dddfe2;
+        }
+
+        .divider span {
+            padding: 0 16px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: #42b72a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #36a420;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 16px;
+            color: #606770;
+            font-size: 14px;
+        }
+
+        .toggle-form a {
+            color: #1877f2;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .alert-error {
+            background: #ffebe9;
+            color: #c92a2a;
+            border: 1px solid #ffc9c9;
+        }
+
+        .alert-success {
+            background: #d3f9d8;
+            color: #2b8a3e;
+            border: 1px solid #8ce99a;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #dddfe2;
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .strength-weak { 
+            width: 33%; 
+            background: #fa5252; 
+        }
+
+        .strength-medium { 
+            width: 66%; 
+            background: #fd7e14; 
+        }
+
+        .strength-strong { 
+            width: 100%; 
+            background: #51cf66; 
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .login-left {
+                text-align: center;
+            }
+
+            .logo-text {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 18px;
+            }
+
+            .login-box {
+                padding: 24px;
+            }
+        }
+
+        .features {
+            margin-top: 40px;
+            display: grid;
+            gap: 16px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Side -->
+        <div class="login-left">
+            <div class="logo">📘</div>
+            <h1 class="logo-text">SocialFlow</h1>
+            <p class="tagline">Conecta con amigos y el mundo que te rodea en SocialFlow.</p>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <span>Posts que desaparecen en 30 minutos</span>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💬</div>
+                    <span>Comentarios y reacciones en tiempo real</span>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔥</div>
+                    <span>Descubre contenido trending</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Login/Register Box -->
+        <div class="login-box">
+            <div id="alertContainer"></div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="form-container active">
+                <h2>Iniciar Sesión</h2>
+                <p class="subtitle">Ingresa a tu cuenta de SocialFlow</p>
+
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginUsername">Usuario</label>
+                        <input 
+                            type="text" 
+                            id="loginUsername" 
+                            placeholder="Tu usuario"
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            placeholder="Tu contraseña"
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
+
+                    <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                </form>
+
+                <div class="divider">
+                    <span>o</span>
+                </div>
+
+                <button class="btn-secondary" onclick="toggleForms()">
+                    Crear Nueva Cuenta
+                </button>
+
+                <div class="toggle-form">
+                    ¿Olvidaste tu contraseña? <a href="#" onclick="showAlert('Contacta al administrador', 'error'); return false;">Recuperar</a>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="form-container">
+                <h2>Crear Cuenta</h2>
+                <p class="subtitle">Es rápido y fácil.</p>
+
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerUsername">Usuario</label>
+                        <input 
+                            type="text" 
+                            id="registerUsername" 
+                            placeholder="Elige un usuario"
+                            required
+                            minlength="3"
+                            autocomplete="username"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo Electrónico</label>
+                        <input 
+                            type="email" 
+                            id="registerEmail" 
+                            placeholder="tu@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña</label>
+                        <input 
+                            type="password" 
+                            id="registerPassword" 
+                            placeholder="Mínimo 6 caracteres"
+                            required
+                            minlength="6"
+                            oninput="checkPasswordStrength(this.value)"
+                            autocomplete="new-password"
+                        >
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div id="strengthFill" class="strength-fill"></div>
+                            </div>
+                            <span id="strengthText" style="color: #606770;"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Registrarse</button>
+                </form>
+
+                <div class="toggle-form">
+                    ¿Ya tienes cuenta? <a onclick="toggleForms()">Iniciar Sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleForms() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            
+            loginForm.classList.toggle('active');
+            registerForm.classList.toggle('active');
+            
+            // Limpiar alertas
+            document.getElementById('alertContainer').innerHTML = '';
+        }
+
+        function showAlert(message, type = 'error') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+            
+            alertContainer.innerHTML = `
+                <div class="alert ${alertClass}">
+                    ${message}
+                </div>
+            `;
+
+            // Auto-remover después de 5 segundos
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function checkPasswordStrength(password) {
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            let strength = 0;
+            
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            strengthFill.className = 'strength-fill';
+            
+            if (strength <= 2) {
+                strengthFill.classList.add('strength-weak');
+                strengthText.textContent = '⚠️ Débil';
+                strengthText.style.color = '#fa5252';
+            } else if (strength <= 4) {
+                strengthFill.classList.add('strength-medium');
+                strengthText.textContent = '✓ Media';
+                strengthText.style.color = '#fd7e14';
+            } else {
+                strengthFill.classList.add('strength-strong');
+                strengthText.textContent = '✓ Fuerte';
+                strengthText.style.color = '#51cf66';
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('¡Bienvenido de vuelta! 🎉', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    showAlert(data.error || 'Error al iniciar sesión', 'error');
+                }
+            } catch (error) {
+                showAlert('Error de conexión. Intenta de nuevo.', 'error');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showAlert('¡Cuenta creada exitosamente! 🎉', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1000);
+                } else {
+                    showAlert(data.error || 'Error al registrarse', 'error');
+                }
+            } catch (error) {
+                showAlert('Error de conexión. Intenta de nuevo.', 'error');
+            }
+        }
+
+        // Manejar Enter en los formularios
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const loginActive = document.getElementById('loginForm').classList.contains('active');
+                if (loginActive) {
+                    handleLogin(e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

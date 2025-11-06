@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialFlow - Tu red social</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-left">
+                <a href="/" class="logo">
+                    <span style="font-size: 36px;">📘</span>
+                    <span class="logo-text">SocialFlow</span>
+                </a>
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" placeholder="Buscar en SocialFlow">
+                </div>
+            </div>
+            
+            <div class="navbar-right">
+                <div class="nav-icon" title="Inicio">🏠</div>
+                <div class="nav-icon" title="Notificaciones">🔔</div>
+                <div class="nav-icon" title="Mensajes">✉️</div>
+                <div class="user-menu" onclick="toggleUserMenu(event)">
+                    <div class="user-avatar">?</div>
+                    <span class="user-name">Usuario</span>
+                </div>
+                
+                <!-- Dropdown Menu -->
+                <div id="userDropdown" style="display: none; position: absolute; top: 60px; right: 16px; background: var(--bg-secondary); border: 1px solid var(--divider); border-radius: 8px; padding: 8px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; min-width: 200px;">
+                    <div style="padding: 12px 16px; border-bottom: 1px solid var(--divider); color: var(--text-primary); font-weight: 600;">Mi Cuenta</div>
+                    <div onclick="logout()" style="padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; color: var(--text-primary); transition: background 0.2s;" onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background='transparent'">
+                        <span>🚪</span>
+                        <span>Cerrar Sesión</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+        <!-- LEFT SIDEBAR -->
+        <aside class="left-sidebar">
+            <div class="sidebar-item">
+                <div class="sidebar-icon">👤</div>
+                <span>Mi perfil</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">👥</div>
+                <span>Amigos</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">📺</div>
+                <span>Videos</span>
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">🎮</div>
+                <span>Juegos</span>
+            </div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon">⚙️</div>
+                <span>Configuración</span>
+            </div>
+        </aside>
+
+        <!-- CENTER FEED -->
+        <main class="center-feed">
+            <!-- CREATE POST BOX -->
+            <div class="create-post-box">
+                <div class="create-post-top">
+                    <div class="create-post-avatar">?</div>
+                    <div class="create-post-input">
+                        <input 
+                            type="text" 
+                            placeholder="¿Qué estás pensando?"
+                            onclick="expandPostBox()"
+                            readonly
+                        >
+                    </div>
+                </div>
+                
+                <textarea 
+                    id="postTextarea" 
+                    class="create-post-textarea" 
+                    placeholder="¿Qué estás pensando?"
+                ></textarea>
+                
+                <div class="create-post-divider"></div>
+                
+                <div class="create-post-actions">
+                    <div class="post-actions-left">
+                        <div class="action-btn">
+                            <span>📷</span>
+                            <span>Foto/video</span>
+                        </div>
+                        <div class="action-btn">
+                            <span>😊</span>
+                            <span>Sentimiento</span>
+                        </div>
+                    </div>
+                    <button 
+                        class="post-button" 
+                        id="postButton" 
+                        onclick="createPost()"
+                        disabled
+                    >
+                        Publicar
+                    </button>
+                </div>
+            </div>
+
+            <!-- POSTS CONTAINER -->
+            <div id="postsContainer">
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <h3>Cargando publicaciones...</h3>
+                </div>
+            </div>
+        </main>
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="right-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">📊 Estadísticas</div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>📝</span>
+                        <span>Publicaciones</span>
+                    </div>
+                    <div class="stat-value" id="totalPosts">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>❤️</span>
+                        <span>Reacciones</span>
+                    </div>
+                    <div class="stat-value" id="totalReactions">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">
+                        <span>💬</span>
+                        <span>Comentarios</span>
+                    </div>
+                    <div class="stat-value" id="totalComments">0</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">ℹ️ Información</div>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                    Las publicaciones desaparecen automáticamente después de 30 minutos. 
+                    ¡Comparte momentos efímeros! ⏰
+                </p>
+            </div>
+        </aside>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
